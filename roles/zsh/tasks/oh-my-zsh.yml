@@ -1,0 +1,11 @@
+- name: Install Oh My Zsh for current user
+  become: true
+  become_user: '{{ zsh_user }}'
+  ansible.builtin.shell: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+  args:
+    creates: '{{ zsh_user_config_dir }}/.oh-my-zsh'
+  ignore_errors: true
+  environment:
+    ZSH: '{{ zsh_user_config_dir }}/.oh-my-zsh'
+    ZDOTDIR: '{{ zsh_user_config_dir }}/zsh'
