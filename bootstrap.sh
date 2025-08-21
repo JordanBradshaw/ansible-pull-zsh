@@ -134,7 +134,7 @@ ansible-playbook -K -i localhost, -c local /dev/stdin <<'YAML'
   vars:
     ansible_pull_repo: "https://github.com/JordanBradshaw/ansible-pull-zsh.git"
     ansible_pull_playbook: "site.yml"
-    ansible_pull_tags: "zsh"
+    ansible_pull_tags: "zsh,zsh-packagaes"
     # Prefer explicit env, else current user
     zsh_user: >-
       {{
@@ -211,7 +211,7 @@ ansible-playbook -K -i localhost, -c local /dev/stdin <<'YAML'
               Environment=ANSIBLE_SERVICE_ZSH_USER={{ zsh_user }}
               {{ systemd_extra_environment }}
               Environment="GIT_SSH_COMMAND=ssh -i %h/.ssh/ansible_ed25519 -o StrictHostKeyChecking=no"
-              ExecStart=/usr/bin/env ansible-pull --only-if-changed -c local -i localhost, \
+              ExecStart=/usr/bin/env ansible-pull --only-if-changed -c local -i localhost \
                 -U {{ ansible_pull_repo }} {{ ansible_pull_playbook }} --tags {{ ansible_pull_tags }}
 
         - name: Deploy ansible-pull-zsh.timer

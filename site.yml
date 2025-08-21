@@ -27,14 +27,14 @@
       tags: [common]
 
     - role: zsh
-      when: >
-          'zsh' in group_names or
-          ansible_local.get('role', {}).get('role', '') == 'zsh' or
-          lookup('env', 'ANSIBLE_SERVICE_ZSH') == 'true'
+      # when: >
+      #     'zsh' in group_names or
+      #     ansible_local.get('role', {}).get('role', '') == 'zsh' or
+      #     lookup('env', 'ANSIBLE_SERVICE_ZSH') == 'true'
       tags: [zsh]
     - role: zsh-packages
-      when: >
-          'zsh-packages' in group_names or
-          ansible_local.get('role', {}).get('role', '') == 'zsh-packages' or
-          lookup('env', 'ANSIBLE_SERVICE_ZSH_PACKAGES') == 'true'
+      # when: >
+      #     'zsh-packages' in group_names or
+      #     ansible_local.get('role', {}).get('role', '') == 'zsh-packages' or
+      #     lookup('env', 'ANSIBLE_SERVICE_ZSH_PACKAGES') == 'true'
       tags: [zsh-packages]
