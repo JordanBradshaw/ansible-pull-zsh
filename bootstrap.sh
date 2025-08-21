@@ -210,7 +210,6 @@ ansible-playbook -K -i localhost, -c local /dev/stdin <<'YAML'
               Environment=ANSIBLE_SERVICE_ZSH=true
               Environment=ANSIBLE_SERVICE_ZSH_USER={{ zsh_user }}
               {{ systemd_extra_environment }}
-              Environment="GIT_SSH_COMMAND=ssh -i %h/.ssh/ansible_ed25519 -o StrictHostKeyChecking=no"
               ExecStart=/usr/bin/env ansible-pull --only-if-changed -c local -i localhost \
                 -U {{ ansible_pull_repo }} {{ ansible_pull_playbook }} --tags {{ ansible_pull_tags }}
 
