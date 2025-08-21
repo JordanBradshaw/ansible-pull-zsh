@@ -1,0 +1,22 @@
+# - name: Ensure apt cache is up to date
+#   apt:
+#     update_cache: yes
+#     cache_valid_time: 3600
+
+# - name: Install base packages
+#   apt:
+#     name:
+#       - curl
+#       - git
+#       - htop
+#     state: present
+- name: Print the host’s FQDN
+  debug:
+    msg: "FQDN is {{ ansible_facts['fqdn'] }}"
+
+# - name: Show home directory from env fact
+#   debug:
+#     msg: "Home: {{ ansible_env.HOME }}"
+- name: show Home dir    
+  debug:
+    msg: "Home directory for {{ zsh_user }} is {{ zsh_user_home }}"

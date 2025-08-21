@@ -1,0 +1,37 @@
+---
+- name: Install fd-find and symlink it to `fd`
+  hosts: all
+  become: true      # for apt
+  vars:
+    fd_src: /usr/bin/fdfind
+    fd_link: "{{ ansible_env.HOME }}/.local/bin/fd"
+
+  tasks:
+    - name: Ensure apt cache is up to date
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install fd-find package
+      apt:
+        name: fd-find
+        state: present
+      register: fd_install
+
+    - name: Ensure ~/.local/bin exists
+      become: false
+      file:
+        path: "{{ ansible_env.HOME }}/.local/bin"
+        state: directory
+        mode: '0755'
+
+    - name: Symlink fdfind to fd if the package was installed
+      become: false
+      file:
+        src: "{{ fd_src }}"
+        dest: "{{ fd_link }}"
+        state: link
+      when:
+        - fd_install is succeeded
+        - fd_install.changed or
+          "'fd-find' in (ansible_facts.packages | default({}))"

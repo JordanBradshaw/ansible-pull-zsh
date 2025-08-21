@@ -1,0 +1,1 @@
+zsh_user: "{{ lookup('env', 'ANSIBLE_SERVICE_ZSH_USER') | default(lookup('env', 'USER')) }}"

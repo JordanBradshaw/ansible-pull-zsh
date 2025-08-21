@@ -1,0 +1,21 @@
+---
+- name: Ensure user fonts directory exists
+  file:
+    path: "{{ user_fonts_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Download Hack Nerd Font zip
+  get_url:
+    url: "{{ nerd_font_url }}"
+    dest: "{{ nerd_font_zip }}"
+    mode: '0644'
+
+- name: Unarchive Nerd Font into user fonts dir
+  unarchive:
+    src: "{{ nerd_font_zip }}"
+    dest: "{{ user_fonts_dir }}"
+    remote_src: yes
+    
+- name: Rebuild font cache for user fonts
+  command: fc-cache -fv "{{ user_fonts_dir }}"

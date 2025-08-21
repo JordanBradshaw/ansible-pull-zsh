@@ -1,0 +1,46 @@
+- name: Install user-level ansible-pull zsh systemd service
+  become: false
+  vars:
+    zsh_service_dir: "/home/{{ zsh_user }}/.config/systemd/user"
+  block:
+    - name: Get UID of user "{{ zsh_user }}"
+      command: id -u {{ zsh_user }}
+      register: zsh_user_uid
+
+    - name: Create systemd user dir
+      file:
+        path: "{{ zsh_service_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Deploy user systemd unit
+      copy:
+        dest: "{{ zsh_service_dir }}/ansible-zsh.service"
+        content: |
+          [Unit]
+          Description=Ansible Pull ZSH Config
+          After=network-online.target
+          Wants=network-online.target
+
+          [Service]
+          Type=oneshot
+          WorkingDirectory=%h/.config/ansible-zsh
+          Environment=ANSIBLE_SERVICE_ZSH=true
+          Environment=ANSIBLE_SERVICE_ZSH_USER={{ zsh_user }}
+          Environment="GIT_SSH_COMMAND=ssh -i %h/.ssh/ansible_ed25519 -o StrictHostKeyChecking=no
+          ExecStart=/usr/bin/env ansible-pull -o -c local -i localhost -U git@github.com:JordanBradshaw/ansible-provisioner.git site.yml --tags zsh
+          Restart=on-failure
+          RemainAfterExit=true
+          [Install]
+          WantedBy=default.target
+        mode: '0644'
+
+    - name: Enable and start the service (user mode)
+      ansible.builtin.shell: |
+        systemctl --user daemon-reexec
+        systemctl --user enable --now ansible-zsh.service
+      become: false
+      environment:
+        XDG_RUNTIME_DIR: "/run/user/{{ zsh_user_uid }}"
+      args:
+        executable: /bin/bash

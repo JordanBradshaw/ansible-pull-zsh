@@ -1,0 +1,59 @@
+# ~/.config/lsd/config.yaml
+
+# ─── DISPLAY & INDICATORS ────────────────────────────────────────────────
+# Show icons next to files (requires a Nerd Font or similar)
+icon: true
+icon_style: powerline
+# Append slash to directories, star to executables, etc.
+indicator-style: unicode
+
+# ─── COLORING ─────────────────────────────────────────────────────────────
+# Enable colorized output
+color: true
+# Pick one: "auto" (detect), "always", or "never"
+color_theme: auto
+
+# ─── COLUMN LAYOUT ────────────────────────────────────────────────────────
+# Which columns to show, in what order:
+#  possible fields: name, size, date, perms, user, group, git_status
+#  by default lsd shows: name, size, date
+format:
+  # A “wide” multi-column layout:
+  - name
+  - size
+  - date
+  - git_status
+
+# ─── SORTING & GROUPING ───────────────────────────────────────────────────
+# Group directories before files
+group-directories-first: true
+# Sort by name, extension, size, time, version or none
+sort:
+  field: name
+  order: asc
+
+# ─── GIT STATUS ───────────────────────────────────────────────────────────
+git_mode:
+  # show git status badges next to files in a repo
+  indicators: true
+  # Which git statuses to display
+  show: [added, modified, deleted, renamed, untracked]
+
+# ─── DATE & TIME ─────────────────────────────────────────────────────────
+time:
+  # "default", "long-iso", "iso", "relative"
+  style: long-iso
+
+# ─── TREE VIEW ───────────────────────────────────────────────────────────
+tree:
+  # when you run `lsd --tree`
+  # default depth; set to 2 or 3 as you like
+  default-depth: 2
+  # show directories only or all files
+  only-dirs: false
+
+# ─── MISCELLANEOUS ────────────────────────────────────────────────────────
+# Show hidden files by default (like `ls -a`)
+hidden: false
+# Do not print headers (like human-readable help lines)
+no-print: false

@@ -1,0 +1,63 @@
+---
+# https://github.com/kubecolor/kubecolor/releases/download/v0.5.1/kubecolor_0.5.1_darwin_amd64.tar.gz
+# https://github.com/kubecolor/kubecolor/releases/download/v0.5.1/kubecolor_0.5.1_linux_amd64.deb
+- name: Show kubectl path or absence
+  ansible.builtin.debug:
+    msg: >-
+      {% if kubectl_check.rc == 0 %}
+        ✅ kubectl found at {{ kubectl_check.stdout }}
+      {% else %}
+        ❌ kubectl not found in PATH
+      {% endif %}
+
+# - name: Attempt to install kubecolor if kubectl exists
+#   ansible.builtin.block:
+- name: Determine architecture and OS
+  set_fact:
+    # pkg_arch: '{{ arch_map[ansible_machine] | default(ansible_machine) }}'
+    pkg_arch: "{{ {'x86_64':'amd64','aarch64':'arm64','armv7l':'armv7'}[ansible_machine] | default(ansible_machine) }}"
+    pkg_os: '{{ ansible_system | lower }}'
+- name: Set kubecolor filename
+  set_fact:
+    kubecolor_filename: 'kubecolor_{{ kubecolor_version }}_{{ pkg_os }}_{{ pkg_arch }}'
+
+- name: Set kubecolor filename and URL
+  ansible.builtin.set_fact:
+    # kubecolor_url: >-
+    #   https://github.com/kubecolor/kubecolor/releases/download/v{{ kubecolor_version }}/{{ kubecolor_filename }}{{ '.tar.gz' if pkg_os != 'linux' else '.deb' }}
+    # kubecolor_dest: "/tmp/{{ kubecolor_filename }}{{ '.tar.gz' if pkg_os != 'linux' else '.deb' }}"
+    kubecolor_url: >-
+      https://github.com/kubecolor/kubecolor/releases/download/v{{ kubecolor_version }}/{{ kubecolor_filename }}{{ '.tar.gz' if pkg_os != 'linux' else '.deb' }}
+    kubecolor_dest: "/tmp/{{ kubecolor_filename }}{{ '.tar.gz' if pkg_os != 'linux' else '.deb' }}"
+
+- name: Download kubecolor release
+  ansible.builtin.get_url:
+    url: '{{ kubecolor_url }}'
+    dest: '{{ kubecolor_dest }}'
+    mode: '0755'
+  register: kubecolor_download
+- name: Install kubecolor .deb package (Linux only)
+  ansible.builtin.apt:
+    deb: '{{ kubecolor_dest }}'
+  become: true
+  when:
+    - pkg_os == 'linux'
+    - kubecolor_dest is search(".deb")
+    - kubecolor_download.changed
+- name: Extract kubecolor binary from .tar.gz (non-Linux)
+  ansible.builtin.unarchive:
+    src: '{{ kubecolor_dest }}'
+    dest: '/usr/local/bin/'
+    remote_src: true
+  when:
+    - pkg_os != 'linux'
+    - kubecolor_dest is search(".tar.gz")
+    - kubecolor_download.changed
+- name: Verify kubecolor is installed
+  ansible.builtin.command: kubecolor --help
+  register: kubecolor_check
+  changed_when: false
+  
+- name: Show installed version
+  debug:
+    msg: '✅ Installed kubecolor version: {{ kubecolor_check.stdout }}'
