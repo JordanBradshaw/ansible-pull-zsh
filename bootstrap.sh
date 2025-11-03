@@ -126,7 +126,7 @@ ansible-playbook -K -i localhost, -c local /dev/stdin <<'YAML'
         update_homebrew: true
 YAML
 
-ansible-playbook -K -i localhost, -c local /dev/stdin <<'YAML'
+ansible-playbook -vvv -K -i localhost, -c local /dev/stdin <<'YAML'
 ---
 - hosts: localhost
   gather_facts: true
@@ -134,7 +134,7 @@ ansible-playbook -K -i localhost, -c local /dev/stdin <<'YAML'
   vars:
     ansible_pull_repo: "https://github.com/JordanBradshaw/ansible-pull-zsh.git"
     ansible_pull_playbook: "site.yml"
-    ansible_pull_tags: "zsh,zsh-packagaes"
+    ansible_pull_tags: "zsh,zsh-packages"
     # Prefer explicit env, else current user
     zsh_user: >-
       {{
@@ -330,6 +330,3 @@ echo "[✓] Done."
 # echo "$SSH_KEY" > ~/.ssh/ansible_ed25519
 # deactivate
 # echo "$PASSWORD"
-
-
-# aws sts assume-role --role-arn arn:aws:iam::074993325733:role/Ansible-Role --role-session-name ansible-pull-session
