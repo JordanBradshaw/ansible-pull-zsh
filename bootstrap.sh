@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-VENV_DIR="${HOME}/.venvs/ansible"
+VENV_DIR="${HOME}/.config/ansible-pull-zsh/venv"
 
 have() { command -v "$1" >/dev/null 2>&1; }
 

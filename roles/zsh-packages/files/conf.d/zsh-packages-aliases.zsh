@@ -4,6 +4,6 @@ alias ls='lsd --long --group-dirs first --icon always'
 alias tree='lsd --tree --depth=2'
 
 alias cat='batcat --paging=never'
-alias find='fdfind'
+# alias find='fdfind'
 
 export FZF_DEFAULT_COMMAND='fdfind --type f'

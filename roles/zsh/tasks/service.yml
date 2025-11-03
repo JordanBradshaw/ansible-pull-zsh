@@ -32,7 +32,7 @@
         mode: '0644'
         content: |
           [Unit]
-          Description=Zsh Shell Provisioning with Ansible Pul
+          Description=Zsh Shell Provisioning with Ansible Pull
           After=network-online.target
           [Service]
           Type=oneshot
@@ -40,7 +40,8 @@
           Environment=ANSIBLE_SERVICE_ZSH=true
           Environment=ANSIBLE_SERVICE_ZSH_USER={{ zsh_user }}
           {{ systemd_extra_environment }}
-          Environment="GIT_SSH_COMMAND=ssh -i %h/.ssh/ansible_ed25519 -o StrictHostKeyChecking=no"
+          Environment="PATH={{ zsh_user_config_dir }}/ansible-pull-zsh/venv/bin:/usr/bin"
+          Environment="PYTHONUNBUFFERED=1"
           ExecStart=/usr/bin/env ansible-pull -o -c local -i localhost -U {{ ansible_pull_repo }} {{ ansible_pull_playbook }} --tags {{ ansible_pull_tags }}
     - name: Deploy ansible-pull-zsh.timer
       ansible.builtin.copy:
