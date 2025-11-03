@@ -1,4 +1,3 @@
----
 - name: Install fd-find and symlink it to `fd`
   hosts: all
   become: true # for apt
