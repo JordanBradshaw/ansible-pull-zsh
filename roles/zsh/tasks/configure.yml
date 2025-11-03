@@ -38,7 +38,6 @@
   ansible.builtin.command: >
     cp {{ zsh_user_home }}/.zshenv {{ zsh_user_home }}/.zshenv.bak_{{ ansible_date_time.iso8601 }}
   when: zshenv_stat.stat.exists
-
 # - name: Ensure ZDOTDIR is set in ~/.zshenv
 #   ansible.builtin.lineinfile:
 #     path: '{{ zsh_user_home }}/.zshenv'
@@ -52,15 +51,15 @@
 #   loop: '{{ zshenv }}'
 #   become: true
 #   become_user: '{{ zsh_user }}'
-- name: Deploy custom .zshenv
-  ansible.builtin.copy:
-    src: 'files/.zshenv'
-    dest: '{{ zsh_user_home }}/.zshenv'
-    owner: '{{ zsh_user }}'
-    group: '{{ zsh_user }}'
-    mode: '0644'
-  become: true
-  become_user: '{{ zsh_user }}'
+# - name: Deploy custom .zshenv
+# ansible.builtin.copy:
+# src: 'files/.zshenv'
+# dest: '{{ zsh_user_home }}/.zshenv'
+# owner: '{{ zsh_user }}'
+# group: '{{ zsh_user }}'
+# mode: '0644'
+# become: true
+# become_user: '{{ zsh_user }}'
 # - name: Ensure Bash aliases are set in .bash_aliases
 #   ansible.builtin.lineinfile:
 #     path: '{{ zsh_user_home }}/.bash_aliases'
