@@ -57,7 +57,7 @@
   ansible.builtin.command: kubecolor --help
   register: kubecolor_check
   changed_when: false
-  
+
 - name: Show installed version
   debug:
     msg: '✅ Installed kubecolor version: {{ kubecolor_check.stdout }}'
